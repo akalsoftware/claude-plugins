@@ -1,0 +1,14 @@
+{
+  "name": "akalsoftware",
+  "description": "Claude Code plugins from Akal Software",
+  "owner": { "name": "Akal Software Ltd", "url": "https://github.com/akalsoftware" },
+  "plugins": [
+    {
+      "name": "supaforge",
+      "source": "./plugins/supaforge",
+      "description": "Find and fix drift between Supabase environments: schema, RLS, roles, auth, storage and more.",
+      "category": "database",
+      "homepage": "https://supaforge.dev"
+    }
+  ]
+}
