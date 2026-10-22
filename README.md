@@ -11,7 +11,7 @@
 
 ## supaforge
 
-- **MCP server**: `scan_drift`, `get_check_result`, `apply_fixes`,
+- **MCP server**: `list_environments`, `diff`, `sync`, `get_check_result`,
   `take_snapshot` and `create_migration`, reading `supaforge.config.json` in
   your project (create one with `npx @akal/supaforge init`).
 - **Skill**: how to find drift, explain it, and apply fixes with the user's

@@ -20,9 +20,10 @@ plugin reads that file in the project directory; the CLI is the same tool
 
 ## Finding drift
 
-Use the `scan_drift` tool (or `supaforge diff`). It writes nothing. Narrow it
-with `checks` / `skip` (CLI: `--check=rls`, `--skip=storage`). Read one
-check's detail with `get_check_result`. For the SQL on the CLI, add
+Use the `diff` tool (or `supaforge diff`). It writes nothing. `list_environments`
+names the environments to compare. Narrow it with `checks` / `skip` (CLI:
+`--check=rls`, `--skip=storage`). Read one check's detail with
+`get_check_result`. For the SQL on the CLI, add
 `--detail`; for machine-readable output, `--json`.
 
 Explain findings by severity: critical first. Posture findings (target-only
@@ -31,17 +32,21 @@ difference.
 
 ## Fixing it
 
-Writing to a database is the user's call. Before `apply_fixes` (or
+Writing to a database is the user's call. Before the `sync` tool (or
 `supaforge diff --apply`):
 
-1. Show what would run: `apply_fixes` previews unless `dryRun: false`; on the
-   CLI, `--dry-run` prints the fixes in order.
+1. Show what would run: `diff` returns the `plan`, the statements `sync`
+   runs, in order, and what it holds back. On the CLI, `--apply --dry-run`
+   prints them.
 2. Ask the user to confirm, naming the target environment.
-3. Prefer `--prove` on the CLI for anything substantial: it rehearses the
-   fixes on a throwaway copy first and refuses if they would fail.
-4. Drops and deletes are held back unless the user asks for them
-   (`--allow-destructive`). Never add it on your own.
-5. Apply a subset with `--only=<id,...>` (ids from `--json`).
+3. Call `sync` with the same arguments as the `diff` they approved, so the
+   plan that runs is the plan they saw.
+4. Prefer `prove: true` (CLI: `--prove`) for anything substantial: it
+   rehearses the fixes on a throwaway copy first and refuses if the copy
+   would not match the source.
+5. Drops and deletes are held back unless the user asks for them
+   (`allowDestructive`, CLI: `--allow-destructive`). Never add it on your own.
+6. Apply a subset with `only` (CLI: `--only=<id,...>`), using ids from `diff`.
 
 Never apply to production unless the user explicitly says so.
 
