@@ -2,7 +2,11 @@
   "mcpServers": {
     "supaforge": {
       "command": "npx",
-      "args": ["-y", "@akal/supaforge@0.0.42", "mcp"]
+      "args": [
+        "-y",
+        "@akal/supaforge@0.0.43",
+        "mcp"
+      ]
     }
   }
 }
