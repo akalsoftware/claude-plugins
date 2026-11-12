@@ -1,12 +1,8 @@
 {
   "mcpServers": {
     "supaforge": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@akal/supaforge@0.0.43",
-        "mcp"
-      ]
+      "command": "node",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/node_modules/@akal/supaforge/bin/run.js", "mcp"]
     }
   }
 }
