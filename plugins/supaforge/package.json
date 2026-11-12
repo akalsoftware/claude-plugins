@@ -1,0 +1,8 @@
+{
+  "name": "supaforge-claude-plugin",
+  "private": true,
+  "description": "The SupaForge release this plugin runs. Claude Code installs it from package-lock.json when the plugin is installed.",
+  "dependencies": {
+    "@akal/supaforge": "0.0.43"
+  }
+}

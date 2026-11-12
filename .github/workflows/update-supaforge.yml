@@ -1,7 +1,8 @@
 name: Update SupaForge
 
-# The plugin runs an exact SupaForge version, so the code that installs is
-# the code that was reviewed. This moves it to each new release.
+# The plugin installs an exact SupaForge version from its lockfile, so the
+# code that installs is the code that was reviewed. This moves it, and the
+# lockfile, to each new release.
 
 on:
   schedule:
@@ -25,24 +26,16 @@ jobs:
           if ! printf '%s' "$latest" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
             echo "::error::unexpected version from npm: $latest"; exit 1
           fi
-          node - "$latest" <<'JS'
-          const fs = require('node:fs')
-          const latest = process.argv[2]
-          const mcpPath = 'plugins/supaforge/.mcp.json'
-          const mcp = JSON.parse(fs.readFileSync(mcpPath, 'utf8'))
-          const args = mcp.mcpServers.supaforge.args
-          const i = args.findIndex(a => a.startsWith('@akal/supaforge@'))
-          if (i < 0) throw new Error('no pinned @akal/supaforge in .mcp.json')
-          if (args[i] === `@akal/supaforge@${latest}`) { console.log(`already on ${latest}`); process.exit(0) }
-          args[i] = `@akal/supaforge@${latest}`
-          fs.writeFileSync(mcpPath, JSON.stringify(mcp, null, 2) + '\n')
-          const pluginPath = 'plugins/supaforge/.claude-plugin/plugin.json'
-          const plugin = JSON.parse(fs.readFileSync(pluginPath, 'utf8'))
-          const [maj, min, patch] = plugin.version.split('.').map(Number)
-          plugin.version = `${maj}.${min}.${patch + 1}`
-          fs.writeFileSync(pluginPath, JSON.stringify(plugin, null, 2) + '\n')
-          console.log(`pinned ${latest}, plugin ${plugin.version}`)
-          JS
+          cd plugins/supaforge
+          current=$(node -p "require('./package.json').dependencies['@akal/supaforge']")
+          if [ "$current" = "$latest" ]; then echo "already on $latest"; exit 0; fi
+          npm install --package-lock-only --save-exact --no-audit --no-fund "@akal/supaforge@$latest"
+          node -e '
+            const fs = require("node:fs"), p = ".claude-plugin/plugin.json", m = JSON.parse(fs.readFileSync(p, "utf8"))
+            const [maj, min, patch] = m.version.split(".").map(Number)
+            m.version = `${maj}.${min}.${patch + 1}`
+            fs.writeFileSync(p, JSON.stringify(m, null, 2) + "\n")
+            console.log(`pinned ${process.argv[1]}, plugin ${m.version}`)' "$latest"
       - name: Commit
         run: |
           git diff --quiet && exit 0
