@@ -18,7 +18,7 @@
   confirmation — previews first, drops only on request, `--prove` for
   anything substantial.
 
-Requires Node.js 20 or newer.
+Requires Node.js 22 or newer.
 
 ## License
 
