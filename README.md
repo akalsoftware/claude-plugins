@@ -23,7 +23,8 @@
 
 When you install the plugin, Claude Code installs the SupaForge release in
 `package-lock.json` (exact versions, with hashes, from the npm registry,
-without running install scripts), and the MCP server runs it with `node`.
+without running install scripts), and the MCP server starts it through
+`server.mjs`.
 SupaForge includes [DBDiff](https://github.com/DBDiff/DBDiff), which npm
 installs as a prebuilt binary for your platform. Each new SupaForge release
 updates the lockfile and the plugin version.

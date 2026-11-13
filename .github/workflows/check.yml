@@ -1,0 +1,52 @@
+name: Check
+
+# Each plugin against what Anthropic's plugin directory asks for, then
+# installed the way Claude Code installs it and started.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_call:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # The latest Claude Code, so new manifest rules show up here first.
+      - name: claude plugin validate
+        run: |
+          npm install -g --no-audit --no-fund @anthropic-ai/claude-code
+          claude plugin validate .
+          for p in plugins/*/; do claude plugin validate "$p"; done
+
+      - name: Directory rules, install and start
+        run: for p in plugins/*/; do node scripts/check-plugin.mjs "$p" --smoke; done
+
+      # Claude Code updates a plugin only when its version changes.
+      - name: Version raised with every change
+        if: github.event_name == 'pull_request'
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+        run: |
+          status=0
+          for p in plugins/*/; do
+            git diff --quiet "$BASE" HEAD -- "$p" && continue
+            before=$(git show "$BASE:${p}.claude-plugin/plugin.json" 2>/dev/null | jq -r .version || true)
+            after=$(jq -r .version "${p}.claude-plugin/plugin.json")
+            if [ -n "$before" ] && [ "$before" = "$after" ]; then
+              echo "::error file=${p}.claude-plugin/plugin.json::${p} changed but its version is still $after"
+              status=1
+            fi
+          done
+          exit $status

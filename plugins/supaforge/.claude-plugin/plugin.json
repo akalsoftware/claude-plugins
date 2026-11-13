@@ -1,7 +1,7 @@
 {
   "name": "supaforge",
   "description": "Find and fix drift between Supabase environments: schema, RLS, roles, auth, storage, webhooks, cron, vault, migrations and reference data.",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "author": {
     "name": "Akal Software Ltd",
     "url": "https://github.com/akalsoftware"
