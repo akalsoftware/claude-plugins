@@ -100,6 +100,10 @@ if (existsSync(join(dir, 'package.json'))) {
   if (extra.length) fail(`package.json: only "dependencies" is kept, found ${extra.join(', ')}`)
   const deps = pkg.dependencies ?? {}
   for (const [n, v] of Object.entries(deps)) if (!/^\d+\.\d+\.\d+$/.test(v)) fail(`package.json: ${n} is "${v}", not an exact version`)
+  // The plugin's version is the release of the one package it runs, so
+  // the version users see is SupaForge's own, and moves with it.
+  const runs = Object.values(deps)
+  if (runs.length === 1 && manifest.version !== runs[0]) fail(`plugin.json: version ${manifest.version} is not ${runs[0]}, the release it runs`)
 
   if (!existsSync(join(dir, 'package-lock.json'))) fail('package.json without package-lock.json: nothing would be installed')
   else {
