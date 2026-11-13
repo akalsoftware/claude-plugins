@@ -1,19 +1,28 @@
 {
   "name": "supaforge",
-  "description": "Find and fix drift between Supabase environments: schema, RLS, roles, auth, storage, webhooks, cron, vault, migrations and reference data.",
-  "version": "1.2.1",
+  "description": "Compare two Supabase projects and sync them: schema, RLS policies, roles, auth, storage, cron, vault and reference data. Shows the SQL first and applies only what you approve.",
+  "version": "1.2.2",
   "author": {
     "name": "Akal Software Ltd",
     "url": "https://github.com/akalsoftware"
   },
   "homepage": "https://supaforge.dev",
   "repository": "https://github.com/akalsoftware/supaforge",
+  "documentationUrl": "https://github.com/akalsoftware/supaforge#readme",
+  "supportUrl": "https://github.com/akalsoftware/supaforge/issues",
+  "privacyPolicyUrl": "https://github.com/akalsoftware/claude-plugins/blob/main/plugins/supaforge/PRIVACY.md",
+  "termsOfServiceUrl": "https://github.com/akalsoftware/supaforge/blob/main/LICENSE",
   "license": "MIT",
   "keywords": [
     "supabase",
     "postgres",
-    "drift",
-    "migrations",
-    "rls"
+    "postgresql",
+    "schema-diff",
+    "database-migration",
+    "supabase-migrations",
+    "row-level-security",
+    "rls",
+    "database-sync",
+    "mcp"
   ]
 }

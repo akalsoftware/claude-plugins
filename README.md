@@ -7,7 +7,7 @@
 
 | Plugin | |
 | --- | --- |
-| [`supaforge`](plugins/supaforge) | Find and fix drift between Supabase environments: the [SupaForge](https://github.com/akalsoftware/supaforge) MCP server, and a skill for using it safely. |
+| [`supaforge`](plugins/supaforge) | Compare two Supabase projects and sync them: the [SupaForge](https://github.com/akalsoftware/supaforge) MCP server, and a skill for using it safely. |
 
 ## supaforge
 
@@ -30,6 +30,8 @@ installs as a prebuilt binary for your platform. Each new SupaForge release
 updates the lockfile and the plugin version.
 
 Requires Node.js 22 or newer, and npm.
+
+It collects no data and has no telemetry: see [PRIVACY.md](plugins/supaforge/PRIVACY.md).
 
 ## License
 
