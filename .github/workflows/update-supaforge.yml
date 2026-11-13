@@ -30,13 +30,12 @@ jobs:
           current=$(node -p "require('./package.json').dependencies['@akal/supaforge']")
           if [ "$current" = "$latest" ]; then echo "already on $latest"; exit 0; fi
           npm install --package-lock-only --save-exact --no-audit --no-fund "@akal/supaforge@$latest"
-          # shellcheck disable=SC2016 # JavaScript, not shell
+          # The plugin's version is the SupaForge release it runs.
           node -e '
             const fs = require("node:fs"), p = ".claude-plugin/plugin.json", m = JSON.parse(fs.readFileSync(p, "utf8"))
-            const [maj, min, patch] = m.version.split(".").map(Number)
-            m.version = `${maj}.${min}.${patch + 1}`
+            m.version = process.argv[1]
             fs.writeFileSync(p, JSON.stringify(m, null, 2) + "\n")
-            console.log(`pinned ${process.argv[1]}, plugin ${m.version}`)' "$latest"
+            console.log("pinned and versioned " + m.version)' "$latest"
       - name: Check the plugin before committing
         run: node scripts/check-plugin.mjs plugins/supaforge --smoke
 

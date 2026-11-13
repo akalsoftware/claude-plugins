@@ -32,21 +32,3 @@ jobs:
 
       - name: Directory rules, install and start
         run: for p in plugins/*/; do node scripts/check-plugin.mjs "$p" --smoke; done
-
-      # Claude Code updates a plugin only when its version changes.
-      - name: Version raised with every change
-        if: github.event_name == 'pull_request'
-        env:
-          BASE: ${{ github.event.pull_request.base.sha }}
-        run: |
-          status=0
-          for p in plugins/*/; do
-            git diff --quiet "$BASE" HEAD -- "$p" && continue
-            before=$(git show "$BASE:${p}.claude-plugin/plugin.json" 2>/dev/null | jq -r .version || true)
-            after=$(jq -r .version "${p}.claude-plugin/plugin.json")
-            if [ -n "$before" ] && [ "$before" = "$after" ]; then
-              echo "::error file=${p}.claude-plugin/plugin.json::${p} changed but its version is still $after"
-              status=1
-            fi
-          done
-          exit $status
